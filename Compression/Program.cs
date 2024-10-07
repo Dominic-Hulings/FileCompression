@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 
 class Init
 {
@@ -80,20 +80,24 @@ class Compression
     public static void Comp(string FilePath)
     {
         Dictionary<string, int> WordList = new Dictionary<string, int>();
-        string[] FullFile = File.ReadAllLines(FilePath);
+        string[] FullFile = File.ReadAllText(FilePath).Split(' ');
 
         foreach(string word in FullFile)
         {
             try
             {
-                int Value = WordList[word];
-                Console.WriteLine(Value);
+                ++WordList[word];
             }
 
             catch
             {
                 WordList.Add(word, 1);
             }        
+        }
+
+        foreach(KeyValuePair<string, int> pair in WordList)
+        {
+            Console.WriteLine(pair);
         }
     }
 }
