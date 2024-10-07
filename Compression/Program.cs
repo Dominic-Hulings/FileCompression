@@ -33,7 +33,7 @@ class Commands
         {
             try
             {
-                 Compression.Init(InCmdRead[1]);
+                 Compression.Init(InCmdRead[1].ToLower());
             }
             catch
             {
@@ -67,13 +67,14 @@ class Commands
 
 class Compression
 {
-    public static void Init(string File)
+    public static int Init(string File)
     {
-        if(File == "test")
+        if(File.ToLower() == "test")
         {
             File = "C:/Users/22008643CTC/Projects/CompressionThing/Compression/testFiles/TestFile.cs";
         }
         Comp(File);
+        return 1;
 
     }
 
@@ -95,9 +96,11 @@ class Compression
             }        
         }
 
-        foreach(KeyValuePair<string, int> pair in WordList)
+        var SortedList = from y in WordList orderby y ascending select y;
+
+        foreach(var y in SortedList)
         {
-            Console.WriteLine(pair);
+            Console.WriteLine(y);
         }
     }
 }
