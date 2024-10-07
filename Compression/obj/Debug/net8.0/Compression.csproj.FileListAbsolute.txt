@@ -1,0 +1,15 @@
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\obj\Debug\net8.0\Compression.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\obj\Debug\net8.0\Compression.AssemblyInfoInputs.cache
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\obj\Debug\net8.0\Compression.AssemblyInfo.cs
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\obj\Debug\net8.0\Compression.csproj.CoreCompileInputs.cache
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\obj\Debug\net8.0\Compression.sourcelink.json
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\bin\Debug\net8.0\Compression.exe
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\bin\Debug\net8.0\Compression.deps.json
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\bin\Debug\net8.0\Compression.runtimeconfig.json
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\bin\Debug\net8.0\Compression.dll
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\bin\Debug\net8.0\Compression.pdb
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\obj\Debug\net8.0\Compression.dll
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\obj\Debug\net8.0\refint\Compression.dll
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\obj\Debug\net8.0\Compression.pdb
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\obj\Debug\net8.0\Compression.genruntimeconfig.cache
+C:\Users\22008643CTC\Projects\CompressionThing\Compression\obj\Debug\net8.0\ref\Compression.dll
