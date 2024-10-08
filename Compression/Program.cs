@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 class Init
 {
@@ -17,7 +18,7 @@ class Run
         Console.WriteLine("Welcome to [name of program], type 'Help' for documentation.");
         while(true)
             {
-                Console.Write("~: "); string? input = Console.ReadLine(); 
+                Console.Write("~: "); string input = Console.ReadLine();
                 Commands.ReadCommand(input);
             }
     }
@@ -31,14 +32,7 @@ class Commands
 
         if(InCmdRead[0].ToLower() == "comp")
         {
-            try
-            {
-                 Compression.Init(InCmdRead[1].ToLower());
-            }
-            catch
-            {
-                Console.WriteLine("Please specify the path to the file");
-            }
+            Compression.Init(InCmdRead[1].ToLower());
         }
 
         else if(InCmdRead[0].ToLower() == "help")
@@ -80,27 +74,31 @@ class Compression
 
     public static void Comp(string FilePath)
     {
+        string ParsedWord;
         Dictionary<string, int> WordList = new Dictionary<string, int>();
         string[] FullFile = File.ReadAllText(FilePath).Split(' ');
 
         foreach(string word in FullFile)
         {
+            ParsedWord = word.Replace("\t", "").Replace("\n", "").Replace("\r", "");
             try
             {
-                ++WordList[word];
+                ++WordList[ParsedWord];
             }
 
             catch
             {
-                WordList.Add(word, 1);
+                WordList.Add(ParsedWord, 1);
             }        
         }
 
-        var SortedList = from y in WordList orderby y ascending select y;
-
-        foreach(var y in SortedList)
+        var SortedList = WordList.OrderBy(item => item.Value).ToDictionary(item => item.Key, item => item.Value);
+        int Pairs = SortedList.Count() - 1;
+       
+        for(int nums = 0; nums != SortedList.Count(); ++nums)
         {
-            Console.WriteLine(y);
+            string Key = SortedList.ElementAt(Pairs).Key;
+            int Value = SortedList.ElementAt(Pairs).Value;
         }
     }
 }
