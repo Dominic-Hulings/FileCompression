@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,13 +71,14 @@ class Compression // Compresses the file at the path specified
 
     public static void Comp(string FilePath) // Compression algorithm
     {
+        int HexCode = 164;
         string ParsedWord; // Initializes variable to be assigned to each word in FullFile list in foreach loop
         Dictionary<string, int> WordList = new Dictionary<string, int>(); // Creates a dictionary to hold an array of KeyValuePairs of a word that appears in the targeted file and how much it appears in the file
         string[] FullFile = File.ReadAllText(FilePath).Split(' '); // Array of every word in targeted file
 
         foreach(string word in FullFile)
         {
-            ParsedWord = word.Replace("\t", "").Replace("\n", "").Replace("\r", ""); //? Get rid of tabs, newlines, and return characters so the keys in the dictionary are only the words, most likely will change as I want the compression to be lossless
+            ParsedWord = word.Replace("\t", "\xA1").Replace("\n", "\xA2").Replace("\r", "\xA3"); //? Get rid of tabs, newlines, and return characters so the keys in the dictionary are only the words, most likely will change as I want the compression to be lossless
             try // Try to find ParsedWord in WordList and increment the key's corresponding value by 1
             {
                 ++WordList[ParsedWord];
@@ -104,7 +105,8 @@ class Compression // Compresses the file at the path specified
                 // // Console.WriteLine("+++++++++++++++++++++++++++++++++++");
                 continue;
             }
-
+            RepList.Add(Key, HexCode.ToString("X"));
+            ++HexCode;
             --Pairs;
         }
     }
