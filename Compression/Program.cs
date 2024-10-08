@@ -3,102 +3,117 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
-class Init
+class Init // Class for initialization of the program
 {
-    static void Main()
+    static void Main() //* As of right now there is nothing to initialize, but I want to leave it here in case there is something that does in the future
     {
-        Run.App();
+        Run.App(); // Line 16
     }
 }
 
-class Run
+class Run // Class to ensure that terminal always runs when commands are completed
 {
     public static void App()
     {
         Console.WriteLine("Welcome to [name of program], type 'Help' for documentation.");
-        while(true)
+        while(true) //* Lines 21 and 22 need to be in the while true loop so once user input is read and finished executing it asks for more input
             {
-                Console.Write("~: "); string input = Console.ReadLine();
-                Commands.ReadCommand(input);
+                Console.Write("~: "); string input = Console.ReadLine(); // First half of line just makes the prompt look prettier, last part reads input 
+                Commands.ReadCommand(input); // TODO: Fix Null reference errors
             }
     }
 }
 
-class Commands
+class Commands // Class to interpret user input to commands
 {
     public static void ReadCommand(string InCmd)
     {
-        string[] InCmdRead = InCmd.Split();
+        string[] InCmdRead = InCmd.Split(); // Separates words in a command to enable subcommands
 
-        if(InCmdRead[0].ToLower() == "comp")
+        if(InCmdRead[0].ToLower() == "comp") // Compresses a file with path specified in next word of command
         {
             Compression.Init(InCmdRead[1].ToLower());
         }
 
-        else if(InCmdRead[0].ToLower() == "help")
+        else if(InCmdRead[0].ToLower() == "help") // Help doc... duh
         {
             string ReadText = File.ReadAllText("C:/Users/22008643CTC/Projects/CompressionThing/Compression/docs/Help.txt");
             Console.WriteLine(ReadText);
         }
 
-        else if(InCmdRead[0].ToLower() == "exit")
+        else if(InCmdRead[0].ToLower() == "exit") // Exits the program
         {
             Environment.Exit(1);
         }
 
-        else if(InCmdRead[0].ToLower() == "clear")
+        else if(InCmdRead[0].ToLower() == "clear") // Clears terminal
         {
             Console.Clear();
         }
 
-        else
+        else // Runs if 1st command isn't recognized
         {
-            Console.WriteLine("The command: '" + InCmdRead[0] + "' was not recognized, please run help for documentation on commands.");
+            Console.WriteLine("The command: '" + InCmdRead[0] + "' was not recognized, please run help for documentation on commands."); // TODO: Make a not recognized command for later commands
         }
-
     }
 }
 
-class Compression
+class Compression // Compresses the file at the path specified
 {
-    public static int Init(string File)
+    public static void Init(string File) //* Initializes anything that needs to be initialized before actual compression begins
     {
-        if(File.ToLower() == "test")
+        if(File.ToLower() == "test") //* Just for testing so I don't have to write out the path every time. Remove later
         {
             File = "C:/Users/22008643CTC/Projects/CompressionThing/Compression/testFiles/TestFile.cs";
         }
         Comp(File);
-        return 1;
-
     }
 
-    public static void Comp(string FilePath)
+    public static void Comp(string FilePath) // Compression algorithm
     {
-        string ParsedWord;
-        Dictionary<string, int> WordList = new Dictionary<string, int>();
-        string[] FullFile = File.ReadAllText(FilePath).Split(' ');
+        string ParsedWord; // Initializes variable to be assigned to each word in FullFile list in foreach loop
+        Dictionary<string, int> WordList = new Dictionary<string, int>(); // Creates a dictionary to hold an array of KeyValuePairs of a word that appears in the targeted file and how much it appears in the file
+        string[] FullFile = File.ReadAllText(FilePath).Split(' '); // Array of every word in targeted file
 
         foreach(string word in FullFile)
         {
-            ParsedWord = word.Replace("\t", "").Replace("\n", "").Replace("\r", "");
-            try
+            ParsedWord = word.Replace("\t", "").Replace("\n", "").Replace("\r", ""); //? Get rid of tabs, newlines, and return characters so the keys in the dictionary are only the words, most likely will change as I want the compression to be lossless
+            try // Try to find ParsedWord in WordList and increment the key's corresponding value by 1
             {
                 ++WordList[ParsedWord];
             }
 
-            catch
+            catch // If try fails, add the ParsedWord to the end of the dictionary with the value of 1 to represent that it's the first time it appeared in the file
             {
                 WordList.Add(ParsedWord, 1);
             }        
         }
 
-        var SortedList = WordList.OrderBy(item => item.Value).ToDictionary(item => item.Key, item => item.Value);
-        int Pairs = SortedList.Count() - 1;
+        var SortedList = WordList.OrderBy(item => item.Value).ToDictionary(item => item.Key, item => item.Value); // Sorts the dictionary by Value (Smallest to Largest)
+        int Pairs = SortedList.Count() - 1; // Finds total number of pairs to easily use as an indexer for the last (and correspondingly the one with the largest value) pair
        
-        for(int nums = 0; nums != SortedList.Count(); ++nums)
+        for(int nums = 0; nums != SortedList.Count(); ++nums) //! UNFINISHED -- Loop through pairs and assign each repeat word to a Unicode character for reference
         {
             string Key = SortedList.ElementAt(Pairs).Key;
             int Value = SortedList.ElementAt(Pairs).Value;
+            // // Console.WriteLine(Key + " -- " + Value);
+
+            if(Key == "" | Value <= 1 | Key.Length == 1)
+            {
+                --Pairs;
+                // // Console.WriteLine("+++++++++++++++++++++++++++++++++++");
+                continue;
+            }
+
+            --Pairs;
         }
     }
 }
+
+
+/*
+using(StreamWriter writer = new StreamWriter("Hello", false, Encoding.UTF8))
+{
+    writer.WriteLine(writer);
+}
+*/
