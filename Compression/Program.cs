@@ -75,7 +75,6 @@ class Compression // Compresses the file at the path specified
 
     public static void Comp(string FilePath) // Compression algorithm
     {
-        int HexCode = 164; // Starts using unicode characters after normal ascii characters
         string ParsedWord; // Initializes variable to be assigned to each word in FullFile list in foreach loop
         Dictionary<string, int> WordList = new Dictionary<string, int>(); // Creates a dictionary to hold an array of KeyValuePairs of a word that appears in the targeted file and how much it appears in the file
         Dictionary<string, int> RepList = new Dictionary<string, int>(); // Creates another dictionary to store a key and the hex code of the unicode character it should be replaced with
@@ -85,7 +84,7 @@ class Compression // Compresses the file at the path specified
         //* £ = return     Console.WriteLine(Strings.ChrW(163).ToString());
         foreach(string word in FullFile)
         {
-            ParsedWord = word.Replace("\t", Strings.ChrW(161).ToString()).Replace("\n", Strings.ChrW(162).ToString()).Replace("\r", ""); //.Replace("\r", Strings.ChrW(163).ToString());
+            ParsedWord = word.Replace("\t", "").Replace("\n", "").Replace("\r", ""); //? Get rid of tabs, newlines, and return characters so the keys in the dictionary are only the words, most likely will change as I want the compression to be lossless
             try // Try to find ParsedWord in WordList and increment the key's corresponding value by 1
             {
                 ++WordList[ParsedWord];
@@ -113,12 +112,8 @@ class Compression // Compresses the file at the path specified
                 --Pairs;
                 continue;
             }
-            else
-            {
-                RepList.Add(Key, HexCode);
-                ++HexCode;
-                --Pairs;
-            }
+
+            --Pairs;
         }
         
         
