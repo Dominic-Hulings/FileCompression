@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Text;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Buffers.Text;
+using System.Text.Unicode;
+using Microsoft.VisualBasic;
 
 class Init // Class for initialization of the program
 {
@@ -71,13 +75,17 @@ class Compression // Compresses the file at the path specified
 
     public static void Comp(string FilePath) // Compression algorithm
     {
+        int HexCode = 164; // Starts using unicode characters after normal ascii characters
         string ParsedWord; // Initializes variable to be assigned to each word in FullFile list in foreach loop
         Dictionary<string, int> WordList = new Dictionary<string, int>(); // Creates a dictionary to hold an array of KeyValuePairs of a word that appears in the targeted file and how much it appears in the file
+        Dictionary<string, int> RepList = new Dictionary<string, int>(); // Creates another dictionary to store a key and the hex code of the unicode character it should be replaced with
         string[] FullFile = File.ReadAllText(FilePath).Split(' '); // Array of every word in targeted file
-
+        //* ¡ = tab     Console.WriteLine(Strings.ChrW(161).ToString());
+        //* ¢ = newLine     Console.WriteLine(Strings.ChrW(162).ToString());
+        //* £ = return     Console.WriteLine(Strings.ChrW(163).ToString());
         foreach(string word in FullFile)
         {
-            ParsedWord = word.Replace("\t", "").Replace("\n", "").Replace("\r", ""); //? Get rid of tabs, newlines, and return characters so the keys in the dictionary are only the words, most likely will change as I want the compression to be lossless
+            ParsedWord = word.Replace("\t", Strings.ChrW(161).ToString()).Replace("\n", Strings.ChrW(162).ToString()).Replace("\r", ""); //.Replace("\r", Strings.ChrW(163).ToString());
             try // Try to find ParsedWord in WordList and increment the key's corresponding value by 1
             {
                 ++WordList[ParsedWord];
@@ -88,7 +96,10 @@ class Compression // Compresses the file at the path specified
                 WordList.Add(ParsedWord, 1);
             }        
         }
-
+        foreach(KeyValuePair<string, int> a in WordList)
+            {
+                Console.WriteLine(a);
+            }
         var SortedList = WordList.OrderBy(item => item.Value).ToDictionary(item => item.Key, item => item.Value); // Sorts the dictionary by Value (Smallest to Largest)
         int Pairs = SortedList.Count() - 1; // Finds total number of pairs to easily use as an indexer for the last (and correspondingly the one with the largest value) pair
        
@@ -96,17 +107,21 @@ class Compression // Compresses the file at the path specified
         {
             string Key = SortedList.ElementAt(Pairs).Key;
             int Value = SortedList.ElementAt(Pairs).Value;
-            // // Console.WriteLine(Key + " -- " + Value);
 
             if(Key == "" | Value <= 1 | Key.Length == 1)
             {
                 --Pairs;
-                // // Console.WriteLine("+++++++++++++++++++++++++++++++++++");
                 continue;
             }
-
-            --Pairs;
+            else
+            {
+                RepList.Add(Key, HexCode);
+                ++HexCode;
+                --Pairs;
+            }
         }
+        
+        
     }
 }
 
@@ -116,4 +131,6 @@ using(StreamWriter writer = new StreamWriter("Hello", false, Encoding.UTF8))
 {
     writer.WriteLine(writer);
 }
+
+Strings.ChrW(HexCode)
 */
