@@ -89,7 +89,7 @@ class Compression // Compresses the file at the path specified
         //* ¢ = newLine     Console.WriteLine(Strings.ChrW(162).ToString());
         foreach(string word in FullFile)
         {
-            ParsedWord = word.Replace(" ", Strings.ChrW(161).ToString()).Replace("\n", Strings.ChrW(162).ToString()).Replace("\r", "");
+            ParsedWord = word.Replace(" ", Strings.ChrW(161).ToString()).Replace("\n", Strings.ChrW(162).ToString()).Replace("\r", ""); //! Resume here
             try // Try to find ParsedWord in WordList and increment the key's corresponding value by 1
             {
                 ++WordList[ParsedWord];
@@ -104,6 +104,7 @@ class Compression // Compresses the file at the path specified
         var SortedList = WordList.OrderBy(item => item.Value).ToDictionary(item => item.Key, item => item.Value); // Sorts the dictionary by Value (Smallest to Largest)
         int Pairs = SortedList.Count() - 1; // Finds total number of pairs to easily use as an indexer for the last (and correspondingly the one with the largest value) pair
 
+        Environment.Exit(1);
         for(int nums = 0; nums != SortedList.Count(); ++nums) //! UNFINISHED -- Loop through pairs and assign each repeat word to a Unicode character for reference
         {
             string Key = SortedList.ElementAt(Pairs).Key;
@@ -158,9 +159,9 @@ class Compression // Compresses the file at the path specified
                     {
                         char[] charArray = ParsedWord.ToCharArray();
                         int Counter;
-                        for(Counter = 0; charArray[Counter] == Strings.ChrW(161); ++Counter);
-                        ParsedWord = ParsedWord.Remove(0, Counter);
-                        ParsedWord.Insert(0, Strings.ChrW(161).ToString() + Counter.ToString());
+                        for(Counter = charArray.Count() - 1; charArray[Counter] == Strings.ChrW(161); --Counter);
+                        ParsedWord = ParsedWord.Remove(Counter + 1);
+                        ParsedWord = ParsedWord + Strings.ChrW(161).ToString() + Counter.ToString();
                     }
                     catch
                     {
