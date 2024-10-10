@@ -39,6 +39,11 @@ class Commands // Class to interpret user input to commands
             Compression.Init(InCmdRead[1].ToLower());
         }
 
+        else if(InCmdRead[0].ToLower() == "rm")
+        {
+            File.Delete("C:/Users/22008643CTC/Projects/CompressionThing/Compression/output/output.txt");
+        }
+
         else if(InCmdRead[0].ToLower() == "help") // Help doc... duh
         {
             string ReadText = File.ReadAllText("C:/Users/22008643CTC/Projects/CompressionThing/Compression/docs/Help.txt");
@@ -82,10 +87,9 @@ class Compression // Compresses the file at the path specified
         string[] FullFile = File.ReadAllText(FilePath).Split(' '); // Array of every word in targeted file
         //* ¡ = tab     Console.WriteLine(Strings.ChrW(161).ToString());
         //* ¢ = newLine     Console.WriteLine(Strings.ChrW(162).ToString());
-        //* £ = return     Console.WriteLine(Strings.ChrW(163).ToString());
         foreach(string word in FullFile)
         {
-            ParsedWord = word.Replace("\t", Strings.ChrW(161).ToString()).Replace("\n", Strings.ChrW(162).ToString()).Replace("\r", "");
+            ParsedWord = word.Replace(" ", Strings.ChrW(161).ToString()).Replace("\n", Strings.ChrW(162).ToString()).Replace("\r", "");
             try // Try to find ParsedWord in WordList and increment the key's corresponding value by 1
             {
                 ++WordList[ParsedWord];
@@ -96,13 +100,10 @@ class Compression // Compresses the file at the path specified
                 WordList.Add(ParsedWord, 1);
             }        
         }
-        foreach(KeyValuePair<string, int> a in WordList)
-            {
-                Console.WriteLine(a);
-            }
+        
         var SortedList = WordList.OrderBy(item => item.Value).ToDictionary(item => item.Key, item => item.Value); // Sorts the dictionary by Value (Smallest to Largest)
         int Pairs = SortedList.Count() - 1; // Finds total number of pairs to easily use as an indexer for the last (and correspondingly the one with the largest value) pair
-       
+
         for(int nums = 0; nums != SortedList.Count(); ++nums) //! UNFINISHED -- Loop through pairs and assign each repeat word to a Unicode character for reference
         {
             string Key = SortedList.ElementAt(Pairs).Key;
@@ -122,52 +123,58 @@ class Compression // Compresses the file at the path specified
         }
         
         RepList = RepList.ToDictionary(item => item.Key, item => item.Value);
-        string OutputFilePath = "C:/Users/22008643CTC/Projects/CompressionThing/Compression/output.txt";
-        File.Create(OutputFilePath);
+        string OutputFilePath = "C:/Users/22008643CTC/Projects/CompressionThing/Compression/output/output.txt";
+        var OutputFile = File.Create(OutputFilePath);
+        OutputFile.Close();
         var AlreadyReplaced = new List<string>();
 
         using(StreamWriter Writer = new StreamWriter(OutputFilePath))
         {
+            bool EndLine = false;
             foreach(string word in FullFile)
             {
-                ParsedWord = word.Replace("\t", Strings.ChrW(161).ToString()).Replace("\n", Strings.ChrW(162).ToString()).Replace("\r", "");
+                ParsedWord = word.Replace(" ", Strings.ChrW(161).ToString()).Replace("\n", Strings.ChrW(162).ToString()).Replace("\r", "");
 
                 if(!RepList.ContainsKey(ParsedWord))
                 {
                     Writer.Write(ParsedWord);
                 }
                 
-                if(!AlreadyReplaced.Contains(ParsedWord))
+                else if(!AlreadyReplaced.Contains(ParsedWord))
                 {
-                    Writer.Write(ParsedWord + RepList[ParsedWord]);
+                    Writer.Write(ParsedWord + Strings.ChrW(RepList[ParsedWord]));
                     AlreadyReplaced.Add(ParsedWord);
                 }
 
                 else
                 {
-                    Writer.Write(RepList[ParsedWord]);
+                    Writer.Write(Strings.ChrW(RepList[ParsedWord]));
                 }
 
-                foreach(char x in word)
+
+                if(ParsedWord.Contains(Strings.ChrW(162)))
                 {
-                    if(x == Strings.ChrW(161))
+                    try
                     {
-                        Writer.Write("\t");
+                        char[] charArray = ParsedWord.ToCharArray();
+                        int Counter;
+                        for(Counter = 0; charArray[Counter] == Strings.ChrW(161); ++Counter);
+                        ParsedWord = ParsedWord.Remove(0, Counter);
+                        ParsedWord.Insert(0, Strings.ChrW(161).ToString() + Counter.ToString());
                     }
-
-                    else if(x == Strings.ChrW(162))
+                    catch
                     {
-                        Writer.Write("\n");
-                    }
-
-                    else
-                    {
-                        Writer.Write(" ");
+                        Console.WriteLine("No spaces");
                     }
                 }
-                
+
+                else
+                {
+                    Writer.Write(Strings.ChrW(161).ToString());
+                }
             }
         }
+        Console.WriteLine("File successfully compressed");
     }
 }
 
@@ -179,4 +186,9 @@ using(StreamWriter writer = new StreamWriter("Hello", false, Encoding.UTF8))
 }
 
 Strings.ChrW(HexCode)
+
+foreach(KeyValuePair<string, int> a in WordList)
+            {
+                Console.WriteLine(a);
+            }
 */
